@@ -6,6 +6,48 @@ use App\Models\Management;
 
 class managementc extends BaseController{
 
+    public function login(){
+
+        $model = new Management();
+        //$data['routeDetails'] = $model->getRouteDetalails();
+        //$data['customerDetails'] = $model->getCustomerDetails();
+
+        $session = \Config\Services::session();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+            //$model ->login($_POST);
+            $info = $model->getLoginInfo($_POST);
+            if (count($info)>0){
+                if (password_verify($_POST['password'],$info[0]['password'])){
+
+                    //set session and redirect
+                    session_start();
+                    $newdata = [
+                        'staff_id'  => $info[0]['staff_id'],
+                        'name'  => $info[0]['name'],
+                    ];
+                    $session->set($newdata);
+
+
+
+                    $this->view();
+                }
+                else {
+                    echo "wrong password";
+                }
+            }else{
+                echo view('mgmt/login');
+            }
+
+        }
+
+        else{
+            echo view('mgmt/login');
+        }
+
+    }
+
+
     public function view(){
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){

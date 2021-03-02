@@ -17,6 +17,14 @@ class Management extends Staff{
         //$this->db = \Config\Database::connect('root');
     }
 
+    public function getLoginInfo($array){
+
+        $sql = "SELECT * FROM staff WHERE NIC = :NIC:";
+        $NIC = $array['NIC'];
+        $results = $this->db->query($sql,['NIC'=> $NIC])->getResult('array');
+        return $results;
+    }
+
     public function getQuarterlySales($year){
 
         $prep = $this->db->prepare(function($db)
